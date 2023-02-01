@@ -1,0 +1,42 @@
+@extends('layouts.admin')
+@section('content')
+<div class="p-3 pt-4">
+    <a href="{{route('admin.projects.index')}}">
+            <i class="fs-3 pb-3 fa-solid fa-circle-arrow-left"></i>
+    </a>
+    <h2>Crea nuovo progetto</h2>
+    <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci il titolo" value="{{ old('title') }}">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descrizione</label>
+            <textarea class="form-control" id="description" name="description" rows="10" placeholder="Inserisci il contenuto">{{ old('description') }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">Immagine</label>
+            <input type="file" class="form-control" id="image" name="image" placeholder="Carica immagine" value="{{ old('image') }}">
+        </div>
+        <div class="mb-3">
+            <label for="type_id" class="form-label">Tipologia</label>
+            <select class="form-select" name="type_id" id="type_id">
+                @foreach ($types as $type)
+                <?php if ($type->id == 4) $type->name = 'Altro'?>
+                <option value="{{$type->id}}">{{ ucfirst($type->name) }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
+            @foreach ($technologies as $technology)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" id="{{$technology->slug}}" name="technologies[]" value="{{$technology->id}}" {{ in_array($technology->id, old('technologies', []) ) ? 'checked' : '' }}>
+                <label for="{{$technology->slug}}" class="form-check-label">{{$technology->name}}</label>
+            </div>
+            @endforeach
+        </div>
+        <button type="submit" class="btn btn-primary">Crea</button>
+    </form>
+</div>
+@endsection
